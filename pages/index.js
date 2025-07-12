@@ -174,7 +174,18 @@ Play now: https://gamesnovastro.vercel.app/`;
           width={80}
           height={80}
           className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-90"
+        />        <Image
+          src="/assets/novastro-logo.png"
+          alt="Novastro Watermark"
+          width={100}
+          height={100}
+          className="fixed bottom-4 right-4 opacity-10 pointer-events-none"
         />
+      </div>
+    </>
+  );
+}
+
       </div>
     </>
   );
