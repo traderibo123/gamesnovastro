@@ -46,7 +46,7 @@ export default function Home() {
 
   const spawnAsset = () => {
     const rareChance = Math.random();
-    const pool = rareChance < 0.1 ? assets : assets.filter((a) => !a.rare);
+    const pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
     const randIndex = Math.floor(Math.random() * pool.length);
     setCurrentAsset(pool[randIndex]);
   };
@@ -64,13 +64,6 @@ export default function Home() {
     if (nickname.trim()) setSubmitted(true);
   };
 
-  const handleShare = () => {
-    const tweet = `I scored ${score} in the Novastro Tokenize Game! 🪙
-Play now: https://gamesnovastro.vercel.app/`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-    window.open(url, '_blank');
-  };
-
   return (
     <>
       <Head>
@@ -82,25 +75,31 @@ Play now: https://gamesnovastro.vercel.app/`;
         className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover"
         style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
       >
+        {/* Giriş Ekranı */}
         {!submitted ? (
-          <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400">
-            <h1 className="text-3xl font-bold mb-2 text-center">Welcome to</h1>
-            <h2 className="text-4xl font-extrabold mb-4 text-center text-cyan-300">Novastro Tokenize Games</h2>
-            <p className="text-sm text-center text-white/70 mb-6">Start your mission by entering your nickname:</p>
+          <form
+            onSubmit={handleNicknameSubmit}
+            className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400"
+          >
+            <h1 className="text-3xl font-bold mb-4">Welcome to Novastro Tokenize Games!</h1>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="Your nickname"
               required
-              className="px-4 py-2 text-black rounded w-64"
+              className="px-4 py-2 text-black rounded"
             />
-            <button type="submit" className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4">
+            <button
+              type="submit"
+              className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4"
+            >
               Continue
             </button>
           </form>
         ) : (
           <>
+            {/* Oyun Alanı */}
             <h1 className="text-4xl font-bold mb-2 text-center">Tokenize Everything! 🪙</h1>
             <p className="text-sm mb-2 text-center">Welcome, <span className="font-semibold">{nickname}</span></p>
             <p className="mb-1">⏳ Time Left: <span className="font-bold">{timeLeft}s</span></p>
@@ -125,6 +124,7 @@ Play now: https://gamesnovastro.vercel.app/`;
               </div>
             )}
 
+            {/* Tokenize Butonu */}
             {isGameRunning && (
               <button
                 onClick={handleClick}
@@ -134,29 +134,29 @@ Play now: https://gamesnovastro.vercel.app/`;
               </button>
             )}
 
+            {/* Oyun Bitti Ekranı */}
             {!isGameRunning && timeLeft === 0 && (
               <div className="text-center mt-6">
                 <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
                 <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
-                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
+                <Image
+                  src="/assets/traderibo.jpg"
+                  alt="Traderibo"
+                  width={60}
+                  height={60}
+                  className="mx-auto rounded-full mb-1"
+                />
                 <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
-                <div className="flex justify-center mt-4 gap-4">
-                  <button
-                    onClick={startGame}
-                    className="px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
-                  >
-                    Play Again
-                  </button>
-                  <button
-                    onClick={handleShare}
-                    className="px-6 py-3 bg-blue-600 rounded-xl font-bold text-white hover:bg-blue-500"
-                  >
-                    Share on X
-                  </button>
-                </div>
+                <button
+                  onClick={startGame}
+                  className="mt-4 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
+                >
+                  Play Again
+                </button>
               </div>
             )}
 
+            {/* Oyun Başlat */}
             {!isGameRunning && timeLeft === 30 && (
               <button
                 onClick={startGame}
@@ -168,24 +168,14 @@ Play now: https://gamesnovastro.vercel.app/`;
           </>
         )}
 
+        {/* Filigran Novastro Logosu */}
         <Image
           src="/assets/novastro-logo.png"
           alt="Novastro Logo"
-          width={80}
-          height={80}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-90"
-        />        <Image
-          src="/assets/novastro-logo.png"
-          alt="Novastro Watermark"
-          width={100}
-          height={100}
-          className="fixed bottom-4 right-4 opacity-10 pointer-events-none"
+          width={90}
+          height={90}
+          className="absolute bottom-2 right-2 opacity-20 pointer-events-none"
         />
-      </div>
-    </>
-  );
-}
-
       </div>
     </>
   );
