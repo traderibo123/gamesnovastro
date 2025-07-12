@@ -19,12 +19,6 @@ export default function Home() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [pointFeedback, setPointFeedback] = useState(null);
-  const [highScores, setHighScores] = useState([]);
-
-  useEffect(() => {
-    const storedScores = JSON.parse(localStorage.getItem('novastro-scores')) || [];
-    setHighScores(storedScores);
-  }, []);
 
   useEffect(() => {
     let interval;
@@ -34,7 +28,6 @@ export default function Home() {
           if (prev <= 1) {
             clearInterval(interval);
             setIsGameRunning(false);
-            saveScore();
             return 0;
           }
           return prev - 1;
@@ -53,7 +46,7 @@ export default function Home() {
 
   const spawnAsset = () => {
     const rareChance = Math.random();
-    const pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
+    const pool = rareChance < 0.1 ? assets : assets.filter((a) => !a.rare);
     const randIndex = Math.floor(Math.random() * pool.length);
     setCurrentAsset(pool[randIndex]);
   };
@@ -71,18 +64,10 @@ export default function Home() {
     if (nickname.trim()) setSubmitted(true);
   };
 
-  const saveScore = () => {
-    const newScore = { nickname, score };
-    const updatedScores = [...highScores, newScore]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-    localStorage.setItem('novastro-scores', JSON.stringify(updatedScores));
-    setHighScores(updatedScores);
-  };
-
-  const shareOnX = () => {
-    const text = `I just scored ${score} points in the Novastro Clicker Game 🚀\nTry it here: https://gamesnovastro.vercel.app/`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  const handleShare = () => {
+    const tweet = `I scored ${score} in the Novastro Tokenize Game! 🪙
+Play now: https://gamesnovastro.vercel.app/`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
     window.open(url, '_blank');
   };
 
@@ -99,14 +84,16 @@ export default function Home() {
       >
         {!submitted ? (
           <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400">
-            <h1 className="text-3xl font-bold mb-4">Enter Your Nickname</h1>
+            <h1 className="text-3xl font-bold mb-2 text-center">Welcome to</h1>
+            <h2 className="text-4xl font-extrabold mb-4 text-center text-cyan-300">Novastro Tokenize Games</h2>
+            <p className="text-sm text-center text-white/70 mb-6">Start your mission by entering your nickname:</p>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="Your nickname"
               required
-              className="px-4 py-2 text-black rounded"
+              className="px-4 py-2 text-black rounded w-64"
             />
             <button type="submit" className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4">
               Continue
@@ -151,31 +138,22 @@ export default function Home() {
               <div className="text-center mt-6">
                 <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
                 <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
-
-                {/* Skorboard */}
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-gray-400 max-w-xs mx-auto my-4">
-                  <h3 className="text-lg font-bold mb-2">🏅 Top Scores</h3>
-                  <ul>
-                    {highScores.map((entry, idx) => (
-                      <li key={idx} className="text-sm">{idx + 1}. {entry.nickname}: {entry.score}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* X'te paylaş */}
-                <button onClick={shareOnX} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
-                  Share on X
-                </button>
-
-                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1 mt-4" />
+                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
                 <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
-
-                <button
-                  onClick={startGame}
-                  className="mt-4 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
-                >
-                  Play Again
-                </button>
+                <div className="flex justify-center mt-4 gap-4">
+                  <button
+                    onClick={startGame}
+                    className="px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
+                  >
+                    Play Again
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="px-6 py-3 bg-blue-600 rounded-xl font-bold text-white hover:bg-blue-500"
+                  >
+                    Share on X
+                  </button>
+                </div>
               </div>
             )}
 
