@@ -2,22 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Galaksi arka planı */
+/* Galaksi arka planı ve genel stiller */
 body {
-  @apply bg-black text-white;
-  background-image: url('/assets/stars-bg.jpg');
+  background: black url('/assets/stars-bg.jpg') no-repeat center center fixed;
   background-size: cover;
-  background-position: center;
+  color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* Giriş kutusu */
+/* Giriş input kutusu */
 input {
-  @apply px-4 py-2 rounded-md text-black text-lg;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 1.125rem;
   border: 2px solid #0ff;
-  outline: none;
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
   background-color: white;
+  color: black;
+  outline: none;
 }
 
 /* Butonlar */
