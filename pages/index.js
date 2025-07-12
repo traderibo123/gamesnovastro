@@ -71,6 +71,7 @@ export default function Home() {
         <meta name="description" content="Click to tokenize real-world assets and earn points!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div
         className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover"
         style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
@@ -147,3 +148,18 @@ export default function Home() {
               >
                 Start Game
               </button>
+            )}
+          </>
+        )}
+
+        <Image
+          src="/assets/novastro-logo.png"
+          alt="Novastro Logo"
+          width={80}
+          height={80}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-90"
+        />
+      </div>
+    </>
+  );
+}
