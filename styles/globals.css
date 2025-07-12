@@ -2,15 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Arka plan için yıldızlı galaksi */
+/* Galaksi arka planı */
 body {
   @apply bg-black text-white;
-  background-image: url('/stars-bg.jpg');
+  background-image: url('/assets/stars-bg.jpg');
   background-size: cover;
   background-position: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Puan efekti animasyonu */
+/* Giriş kutusu */
+input {
+  @apply px-4 py-2 rounded-md text-black text-lg;
+  border: 2px solid #0ff;
+  outline: none;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+  background-color: white;
+}
+
+/* Butonlar */
+button {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Skor animasyonu */
 @keyframes bounceUp {
   0% { transform: translateY(0); opacity: 1; }
   50% { transform: translateY(-30px); opacity: 1; }
@@ -18,5 +37,5 @@ body {
 }
 
 .animate-bounce {
-  animation: bounceUp 0.7s ease-out forwards;
+  animation: bounceUp 0.8s ease-out forwards;
 }

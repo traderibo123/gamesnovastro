@@ -17,7 +17,7 @@ export default function Home() {
   const [currentAsset, setCurrentAsset] = useState(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [isGameRunning, setIsGameRunning] = useState(false);
-  const [showPoints, setShowPoints] = useState(false);
+  const [pointFeedback, setPointFeedback] = useState(null);
 
   useEffect(() => {
     let interval;
@@ -46,14 +46,13 @@ export default function Home() {
   const spawnAsset = () => {
     const randIndex = Math.floor(Math.random() * assets.length);
     setCurrentAsset(assets[randIndex]);
-    setShowPoints(false);
   };
 
   const handleClick = () => {
     if (!isGameRunning || !currentAsset) return;
     setScore((prev) => prev + currentAsset.points);
-    setShowPoints(true);
-    setTimeout(() => setShowPoints(false), 700);
+    setPointFeedback(`+${currentAsset.points}`);
+    setTimeout(() => setPointFeedback(null), 800);
     spawnAsset();
   };
 
@@ -65,69 +64,69 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Tokenize Everything! | Novastro Clicker</title>
+        <title>Tokenize Everything! | Novastro Game</title>
         <meta name="description" content="Click to tokenize real-world assets and earn points!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center px-4 text-white relative" style={{ backgroundImage: 'url(/stars-bg.jpg)' }}>
+      <div className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative">
         {!submitted ? (
-          <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center bg-black/70 p-6 rounded-2xl shadow-xl">
-            <h1 className="text-4xl font-bold text-purple-400 mb-4 drop-shadow">Enter Your Nickname</h1>
+          <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400">
+            <h1 className="text-3xl font-bold mb-4">Enter Your Nickname</h1>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className="px-4 py-2 rounded-lg text-black text-lg mb-4 border-2 border-purple-600 focus:border-yellow-400"
               placeholder="Your nickname"
               required
             />
-            <button type="submit" className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:ring-2 hover:ring-yellow-300 transition-all">
+            <button type="submit" className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4">
               Continue
             </button>
           </form>
         ) : (
           <>
-            <h1 className="text-4xl font-bold mb-2 text-yellow-300 text-center drop-shadow">Tokenize Everything! 🪙</h1>
-            <p className="text-sm mb-2 text-center">Welcome, <span className="font-semibold text-purple-300">{nickname}</span></p>
+            <h1 className="text-4xl font-bold mb-2 text-center">Tokenize Everything! 🪙</h1>
+            <p className="text-sm mb-2 text-center">Welcome, <span className="font-semibold">{nickname}</span></p>
             <p className="mb-1">⏳ Time Left: <span className="font-bold">{timeLeft}s</span></p>
-            <p className="mb-4">🏆 Score: <span className="font-bold text-green-400">{score}</span></p>
+            <p className="mb-4">🏆 Score: <span className="font-bold">{score}</span></p>
 
             {isGameRunning && currentAsset && (
-              <div className="flex flex-col items-center relative">
-                <Image
-                  src={currentAsset.src}
-                  alt={currentAsset.name}
-                  width={160}
-                  height={160}
-                  className="mb-2 animate-pulse"
-                />
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <Image
+                    src={currentAsset.src}
+                    alt={currentAsset.name}
+                    width={150}
+                    height={150}
+                    className="mb-2"
+                  />
+                  {pointFeedback && (
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 text-yellow-400 font-bold text-lg animate-bounce">
+                      {pointFeedback}
+                    </span>
+                  )}
+                </div>
                 <p className="mb-3 text-lg">{currentAsset.name}</p>
                 <button
                   onClick={handleClick}
-                  className="px-6 py-2 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400 transform hover:scale-105 transition"
+                  className="px-6 py-2 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
                 >
                   Tokenize
                 </button>
-                {showPoints && (
-                  <div className="absolute top-0 text-green-400 font-bold text-xl animate-bounce">
-                    +{currentAsset.points}
-                  </div>
-                )}
               </div>
             )}
 
             {!isGameRunning && timeLeft === 0 && (
-              <div className="text-center mt-6 bg-black/60 p-6 rounded-2xl shadow-lg">
-                <h2 className="text-2xl font-bold text-yellow-400 mb-2">🎮 Game Over!</h2>
-                <p className="mb-2">{nickname}, your score is <span className="font-bold text-green-300">{score}</span></p>
-                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1 border border-purple-500" />
-                <p className="text-xs text-white opacity-70 mb-3">Created by Traderibo123</p>
-                <Image src="/novastro-logo.png" alt="Novastro Logo" width={60} height={60} className="mx-auto mb-4 opacity-80" />
+              <div className="text-center mt-6">
+                <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
+                <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
+                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
+                <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
                 <button
                   onClick={startGame}
-                  className="mt-2 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
+                  className="mt-4 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
                 >
-                  🔁 Play Again
+                  Play Again
                 </button>
               </div>
             )}
@@ -135,13 +134,21 @@ export default function Home() {
             {!isGameRunning && timeLeft === 30 && (
               <button
                 onClick={startGame}
-                className="mt-6 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500 transition hover:scale-105"
+                className="mt-6 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
               >
                 Start Game
               </button>
             )}
           </>
         )}
+
+        <Image
+          src="/novastro-logo.png"
+          alt="Novastro Logo"
+          width={80}
+          height={80}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-90"
+        />
       </div>
     </>
   );
