@@ -46,7 +46,7 @@ export default function Home() {
 
   const spawnAsset = () => {
     const rareChance = Math.random();
-    let pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
+    const pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
     const randIndex = Math.floor(Math.random() * pool.length);
     setCurrentAsset(pool[randIndex]);
   };
@@ -65,7 +65,7 @@ export default function Home() {
   };
 
   const shareOnTwitter = () => {
-    const text = `${nickname} scored ${score} in the Novastro Tokenize Game! 🚀 Can you beat it?`;
+    const text = `${nickname} scored ${score} in the Novastro Tokenize Game! Can you beat it? @Novastro_xyz @traderibo123`;
     const url = encodeURIComponent('https://gamesnovastro.vercel.app');
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`;
     window.open(shareUrl, '_blank');
@@ -83,7 +83,6 @@ export default function Home() {
         className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover overflow-hidden"
         style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
       >
-        {/* Arka planda 40 Novastro logosu */}
         {[...Array(40)].map((_, i) => (
           <Image
             key={i}
@@ -101,16 +100,15 @@ export default function Home() {
           />
         ))}
 
-        {/* Giriş Ekranı */}
         {!submitted ? (
           <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400 z-10">
-            <h1 className="text-3xl font-bold mb-2 text-center">Novastro Tokenize Games'e Hoş Geldin</h1>
-            <p className="text-sm mb-4 text-center">Gerçek varlıkları tokenleştir ve puan kazan!</p>
+            <h1 className="text-3xl font-bold mb-2 text-center">Welcome to Novastro Tokenize Games</h1>
+            <p className="text-sm mb-4 text-center">Tokenize real-world assets and earn points!</p>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              placeholder="Nickname"
+              placeholder="Your nickname"
               required
               className="px-4 py-2 text-black rounded"
             />
@@ -136,16 +134,13 @@ export default function Home() {
                   )}
                 </div>
                 <p className="mb-3 text-lg">{currentAsset.name}</p>
+                <button
+                  onClick={handleClick}
+                  className="mt-2 px-6 py-3 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
+                >
+                  Tokenize
+                </button>
               </div>
-            )}
-
-            {isGameRunning && (
-              <button
-                onClick={handleClick}
-                className="fixed bottom-24 px-6 py-3 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
-              >
-                Tokenize
-              </button>
             )}
 
             {!isGameRunning && timeLeft === 0 && (
@@ -154,7 +149,6 @@ export default function Home() {
                 <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
                 <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
                 <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
-
                 <div className="mt-4 flex gap-4 justify-center">
                   <button onClick={startGame} className="px-6 py-2 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500">
                     Play Again
