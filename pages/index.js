@@ -7,7 +7,8 @@ const assets = [
   { name: 'House', src: '/assets/house.png', points: 2 },
   { name: 'Invoice', src: '/assets/invoice.png', points: 1 },
   { name: 'Car', src: '/assets/car.png', points: 3 },
-  { name: 'Solar Panel', src: '/assets/solar.png', points: 4 }
+  { name: 'Solar Panel', src: '/assets/solar.png', points: 4 },
+  { name: 'Novastro Logo', src: '/assets/novastro-logo.png', points: 20, rare: true }
 ];
 
 export default function Home() {
@@ -44,15 +45,17 @@ export default function Home() {
   };
 
   const spawnAsset = () => {
-    const randIndex = Math.floor(Math.random() * assets.length);
-    setCurrentAsset(assets[randIndex]);
+    const rareChance = Math.random();
+    let pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
+    const randIndex = Math.floor(Math.random() * pool.length);
+    setCurrentAsset(pool[randIndex]);
   };
 
   const handleClick = () => {
     if (!isGameRunning || !currentAsset) return;
     setScore((prev) => prev + currentAsset.points);
     setPointFeedback(`+${currentAsset.points}`);
-    setTimeout(() => setPointFeedback(null), 800);
+    setTimeout(() => setPointFeedback(null), 1000);
     spawnAsset();
   };
 
@@ -68,7 +71,10 @@ export default function Home() {
         <meta name="description" content="Click to tokenize real-world assets and earn points!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative">
+      <div
+        className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover"
+        style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
+      >
         {!submitted ? (
           <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400">
             <h1 className="text-3xl font-bold mb-4">Enter Your Nickname</h1>
@@ -78,6 +84,7 @@ export default function Home() {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="Your nickname"
               required
+              className="px-4 py-2 text-black rounded"
             />
             <button type="submit" className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4">
               Continue
@@ -92,28 +99,30 @@ export default function Home() {
 
             {isGameRunning && currentAsset && (
               <div className="flex flex-col items-center">
-                <div className="relative">
+                <div className="relative mb-3">
                   <Image
                     src={currentAsset.src}
                     alt={currentAsset.name}
-                    width={150}
-                    height={150}
-                    className="mb-2"
+                    width={180}
+                    height={180}
                   />
                   {pointFeedback && (
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 text-yellow-400 font-bold text-lg animate-bounce">
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 text-yellow-300 font-bold text-xl animate-bounce">
                       {pointFeedback}
                     </span>
                   )}
                 </div>
                 <p className="mb-3 text-lg">{currentAsset.name}</p>
-                <button
-                  onClick={handleClick}
-                  className="px-6 py-2 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
-                >
-                  Tokenize
-                </button>
               </div>
+            )}
+
+            {isGameRunning && (
+              <button
+                onClick={handleClick}
+                className="fixed bottom-24 px-6 py-3 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
+              >
+                Tokenize
+              </button>
             )}
 
             {!isGameRunning && timeLeft === 0 && (
@@ -138,18 +147,3 @@ export default function Home() {
               >
                 Start Game
               </button>
-            )}
-          </>
-        )}
-
-        <Image
-          src="/novastro-logo.png"
-          alt="Novastro Logo"
-          width={80}
-          height={80}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-90"
-        />
-      </div>
-    </>
-  );
-}
