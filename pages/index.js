@@ -53,7 +53,7 @@ export default function Home() {
 
   const handleClick = () => {
     if (!isGameRunning || !currentAsset) return;
-    setScore((prev) => prev + currentAsset.points);
+    setScore(prev => prev + currentAsset.points);
     setPointFeedback(`+${currentAsset.points}`);
     setTimeout(() => setPointFeedback(null), 1000);
     spawnAsset();
@@ -71,42 +71,62 @@ export default function Home() {
         <meta name="description" content="Click to tokenize real-world assets and earn points!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div
-        className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover"
+        className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover overflow-hidden"
         style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
       >
-        {/* Giriş Ekranı */}
+        {/* 40 Novastro Logos - Background Filigran */}
+        {Array.from({ length: 40 }).map((_, i) => {
+          const top = Math.floor(Math.random() * 100);
+          const left = Math.floor(Math.random() * 100);
+          const size = 40 + Math.floor(Math.random() * 50);
+          const opacity = 10 + Math.floor(Math.random() * 30);
+          return (
+            <Image
+              key={i}
+              src="/assets/novastro-logo.png"
+              alt="Logo"
+              width={size}
+              height={size}
+              className="absolute pointer-events-none z-0"
+              style={{
+                top: `${top}%`,
+                left: `${left}%`,
+                opacity: opacity / 100,
+                transform: 'translate(-50%, -50%)',
+                position: 'absolute'
+              }}
+            />
+          );
+        })}
+
+        {/* Giriş ekranı */}
         {!submitted ? (
-          <form
-            onSubmit={handleNicknameSubmit}
-            className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400"
-          >
-            <h1 className="text-3xl font-bold mb-4">Welcome to Novastro Tokenize Games!</h1>
+          <form onSubmit={handleNicknameSubmit} className="flex flex-col items-center backdrop-blur-sm p-6 rounded-lg bg-white/10 border border-cyan-400 z-10">
+            <h1 className="text-3xl font-bold mb-2">Novastro Tokenize Games'e Hoş Geldin</h1>
+            <p className="text-sm mb-4 text-center text-gray-200">Click-to-tokenize RWA adventure starts now.</p>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="Your nickname"
               required
-              className="px-4 py-2 text-black rounded"
+              className="px-4 py-2 text-black rounded mb-4"
             />
-            <button
-              type="submit"
-              className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400 mt-4"
-            >
+            <button type="submit" className="px-6 py-2 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-400">
               Continue
             </button>
           </form>
         ) : (
           <>
-            {/* Oyun Alanı */}
-            <h1 className="text-4xl font-bold mb-2 text-center">Tokenize Everything! 🪙</h1>
-            <p className="text-sm mb-2 text-center">Welcome, <span className="font-semibold">{nickname}</span></p>
-            <p className="mb-1">⏳ Time Left: <span className="font-bold">{timeLeft}s</span></p>
-            <p className="mb-4">🏆 Score: <span className="font-bold">{score}</span></p>
+            <h1 className="text-4xl font-bold mb-2 text-center z-10">Tokenize Everything! 🪙</h1>
+            <p className="text-sm mb-2 text-center z-10">Welcome, <span className="font-semibold">{nickname}</span></p>
+            <p className="mb-1 z-10">⏳ Time Left: <span className="font-bold">{timeLeft}s</span></p>
+            <p className="mb-4 z-10">🏆 Score: <span className="font-bold">{score}</span></p>
 
             {isGameRunning && currentAsset && (
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center z-10">
                 <div className="relative mb-3">
                   <Image
                     src={currentAsset.src}
@@ -124,28 +144,20 @@ export default function Home() {
               </div>
             )}
 
-            {/* Tokenize Butonu */}
             {isGameRunning && (
               <button
                 onClick={handleClick}
-                className="fixed bottom-24 px-6 py-3 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400"
+                className="fixed bottom-24 px-6 py-3 bg-yellow-500 text-black rounded-xl font-semibold hover:bg-yellow-400 z-20"
               >
                 Tokenize
               </button>
             )}
 
-            {/* Oyun Bitti Ekranı */}
             {!isGameRunning && timeLeft === 0 && (
-              <div className="text-center mt-6">
+              <div className="text-center mt-6 z-10">
                 <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
                 <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
-                <Image
-                  src="/assets/traderibo.jpg"
-                  alt="Traderibo"
-                  width={60}
-                  height={60}
-                  className="mx-auto rounded-full mb-1"
-                />
+                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
                 <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
                 <button
                   onClick={startGame}
@@ -156,26 +168,16 @@ export default function Home() {
               </div>
             )}
 
-            {/* Oyun Başlat */}
             {!isGameRunning && timeLeft === 30 && (
               <button
                 onClick={startGame}
-                className="mt-6 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
+                className="mt-6 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500 z-10"
               >
                 Start Game
               </button>
             )}
           </>
         )}
-
-        {/* Filigran Novastro Logosu */}
-        <Image
-          src="/assets/novastro-logo.png"
-          alt="Novastro Logo"
-          width={90}
-          height={90}
-          className="absolute bottom-2 right-2 opacity-20 pointer-events-none"
-        />
       </div>
     </>
   );
