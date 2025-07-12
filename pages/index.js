@@ -19,6 +19,12 @@ export default function Home() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [pointFeedback, setPointFeedback] = useState(null);
+  const [highScores, setHighScores] = useState([]);
+
+  useEffect(() => {
+    const storedScores = JSON.parse(localStorage.getItem('novastro-scores')) || [];
+    setHighScores(storedScores);
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -28,6 +34,7 @@ export default function Home() {
           if (prev <= 1) {
             clearInterval(interval);
             setIsGameRunning(false);
+            saveScore();
             return 0;
           }
           return prev - 1;
@@ -46,7 +53,7 @@ export default function Home() {
 
   const spawnAsset = () => {
     const rareChance = Math.random();
-    let pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
+    const pool = rareChance < 0.1 ? assets : assets.filter(a => !a.rare);
     const randIndex = Math.floor(Math.random() * pool.length);
     setCurrentAsset(pool[randIndex]);
   };
@@ -64,6 +71,21 @@ export default function Home() {
     if (nickname.trim()) setSubmitted(true);
   };
 
+  const saveScore = () => {
+    const newScore = { nickname, score };
+    const updatedScores = [...highScores, newScore]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+    localStorage.setItem('novastro-scores', JSON.stringify(updatedScores));
+    setHighScores(updatedScores);
+  };
+
+  const shareOnX = () => {
+    const text = `I just scored ${score} points in the Novastro Clicker Game 🚀\nTry it here: https://gamesnovastro.vercel.app/`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <>
       <Head>
@@ -71,7 +93,6 @@ export default function Home() {
         <meta name="description" content="Click to tokenize real-world assets and earn points!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div
         className="flex flex-col items-center justify-center min-h-screen text-white px-4 relative bg-cover"
         style={{ backgroundImage: 'url("/assets/stars-bg.jpg")' }}
@@ -130,8 +151,25 @@ export default function Home() {
               <div className="text-center mt-6">
                 <h2 className="text-2xl font-bold mb-2">Game Over!</h2>
                 <p className="mb-2">{nickname}, your score is <span className="font-bold">{score}</span></p>
-                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1" />
+
+                {/* Skorboard */}
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-gray-400 max-w-xs mx-auto my-4">
+                  <h3 className="text-lg font-bold mb-2">🏅 Top Scores</h3>
+                  <ul>
+                    {highScores.map((entry, idx) => (
+                      <li key={idx} className="text-sm">{idx + 1}. {entry.nickname}: {entry.score}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* X'te paylaş */}
+                <button onClick={shareOnX} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
+                  Share on X
+                </button>
+
+                <Image src="/assets/traderibo.jpg" alt="Traderibo" width={60} height={60} className="mx-auto rounded-full mb-1 mt-4" />
                 <p className="text-xs text-white opacity-70">Created by Traderibo123</p>
+
                 <button
                   onClick={startGame}
                   className="mt-4 px-6 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-500"
